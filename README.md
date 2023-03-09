@@ -19,3 +19,26 @@ COPY src/index.html /usr/local/apache2/htdocs/
 L'avantage de la procédure 5 est que vous pouvez modifier le fichier index.html à tout moment sur le système d'exploitation hôte, et les modifications seront immédiatement visibles dans le conteneur. Cela permet une grande flexibilité lors du développement de votre application.
 
 L'avantage de la procédure 6 est que l'image Docker contient toutes les dépendances et configurations nécessaires pour exécuter votre application. Cela rend votre application plus portable et facile à déployer sur différents environnements.
+
+7 A     on récupère les images avec ces commandes:
+docker pull mysql:5.7
+docker pull phpmyadmin/phpmyadmin
+
+7 B nous allons avoir besoin d'un réseau pour connecter les deux conteneur:
+    docker network create my-network
+
+    pour le conteneur MySQL:
+    docker run -d --name mysql-container \
+    -e MYSQL_ROOT_PASSWORD=randompass \
+    -e MYSQL_DATABASE=my_database \
+    --network my-network \
+    mysql:5.7
+
+    pour php my admin:
+    docker run -d --name phpmyadmin-container \
+    -e PMA_HOST=mysql-container \
+    -p 8080:80 \
+    --network my-network \
+    phpmyadmin/phpmyadmin
+
+    une fois les deux conteneur lancé il suffit d'aller sur le port 8080 pour accéder à phpmyadmin et y rentrer des donnés avec des requetes sql
